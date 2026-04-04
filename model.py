@@ -4,8 +4,8 @@ from torch.nn import functional as F
 
 # Hyperparameters
 batch_size = 64
-block_size = 256 # Content window
-max_iters = 5000
+block_size = 128 # Content window
+max_iters = 1000
 eval_interval = 500
 learning_rate = 3e-4
 device = 'mps' if torch.backends.mps.is_available() else 'cpu'

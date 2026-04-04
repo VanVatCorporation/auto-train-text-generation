@@ -5,11 +5,10 @@ from data import load_data, Tokenizer, get_batch
 import os
 
 # 1. Load your dataset
-DATA_PATH = 'data.txt'
+DATA_PATH = 'data_instruct.txt'
 if not os.path.exists(DATA_PATH):
-    # Dummy data if no file exists
-    with open(DATA_PATH, 'w') as f:
-        f.write("1+1=2. 2+2=4. The sky is blue. Grass is green. Human is the best.")
+    print(f"Error: {DATA_PATH} not found.")
+    exit()
 
 text = load_data(DATA_PATH)
 tokenizer = Tokenizer(text)

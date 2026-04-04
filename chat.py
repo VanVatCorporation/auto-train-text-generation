@@ -36,28 +36,33 @@ def chat():
         facts = memory.retrieve_relevant_facts(user_input, n_results=1)
         memory_context = ""
         if facts:
-            memory_context = f"Recall: {facts[0]}. "
+            memory_context = f"<|recall|> Information: {facts[0]} <|end|> "
         
         # 4. Prepare Context for Model
-        # We'll feed: Facts : Input : 
-        full_context_text = f"{memory_context}{user_input} : "
+        # Using specific tokens
+        full_context_text = f"{memory_context}<|user|> {user_input} <|end|> <|thought|> "
         
         # Encode
         context_ids = torch.tensor([tokenizer.encode(full_context_text)], dtype=torch.long, device=device)
         
         # 5. Generate Response
-        # We generate until we see a newline or a certain length
-        print("AI: ", end="", flush=True)
-        # Using a simplistic generation loop to show characters as they appear
-        generated_ids = model.generate(context_ids, max_new_tokens=50)
+        # We generate more tokens to allow space for thought and answer
+        generated_ids = model.generate(context_ids, max_new_tokens=150)
         
         # Decode only the NEW tokens
         new_tokens = generated_ids[0][len(context_ids[0]):]
         response_text = tokenizer.decode(new_tokens.tolist())
         
-        # Simple cleanup - stop at first newline
-        clean_response = response_text.split("\n")[0]
-        print(clean_response)
+        # Parse output for thinking and answer
+        if "<|end|> <|assistant|>" in response_text:
+            parts = response_text.split("<|end|> <|assistant|>")
+            thinking = parts[0].strip()
+            answer = parts[1].split("<|end|>")[0].strip()
+            print(f"\n[Thinking]: {thinking}\n[AI]: {answer}\n")
+        else:
+            # Fallback
+            clean_response = response_text.split("<|end|>")[0]
+            print(f"{clean_response}\n")
 
         # 6. Auto-Learn
         if memory.auto_detect_fact(user_input):
