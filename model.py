@@ -5,8 +5,8 @@ from torch.nn import functional as F
 # Hyperparameters
 batch_size = 64
 block_size = 128 # Content window
-max_iters = 1000
-eval_interval = 500
+max_iters = 2500 # Training steps
+eval_interval = 100 # Evaluate every 100 steps | Default: 500
 learning_rate = 3e-4
 device = 'mps' if torch.backends.mps.is_available() else 'cpu'
 eval_iters = 200
