@@ -39,8 +39,8 @@ def chat():
             memory_context = f"Recall: {facts[0]}. "
         
         # 4. Prepare Context for Model
-        # We'll feed: Facts + User Prompt
-        full_context_text = f"{memory_context}Question: {user_input} Answer:"
+        # We'll feed: Facts : Input : 
+        full_context_text = f"{memory_context}{user_input} : "
         
         # Encode
         context_ids = torch.tensor([tokenizer.encode(full_context_text)], dtype=torch.long, device=device)

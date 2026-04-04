@@ -8,7 +8,7 @@ class Tokenizer:
         self.itos = { i:ch for i,ch in enumerate(self.chars) }
 
     def encode(self, s):
-        return [self.stoi[c] for c in s]
+        return [self.stoi[c] for c in s if c in self.stoi]
 
     def decode(self, l):
         return ''.join([self.itos[i] for i in l])
